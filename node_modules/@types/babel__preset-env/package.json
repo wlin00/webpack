@@ -1,0 +1,24 @@
+{
+    "name": "@types/babel__preset-env",
+    "version": "7.9.1",
+    "description": "TypeScript definitions for @babel/preset-env",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Slava Fomin II",
+            "url": "https://github.com/slavafomin",
+            "githubUsername": "slavafomin"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/babel__preset-env"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "326a2d41abcff39fcc4e397a44a0ac3e9375fdb344d2e4f4fe84d628c154b650",
+    "typeScriptVersion": "3.2"
+}
