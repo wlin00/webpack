@@ -24,6 +24,10 @@ const getProjectPath = (path: string) => { // 接收一个绝对路径，转换�
 const collect = (filePath: string) => {
   // 获取当前收集文件的项目路径如：index.js
   const key = getProjectPath(filePath)
+  if (Object.keys(depRelation).includes(key)) {
+    console.warn(`duplicated dependency: ${key}`) // 监测到重复key 退出递归
+    return
+  }
   // 获取源代码
   const code = readFileSync(filePath).toString()
   // 生成ast， 并将当前依赖放入map
