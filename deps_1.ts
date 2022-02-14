@@ -1,4 +1,5 @@
 // 遍历ast树，进行入口文件的依赖分析
+// 可使用 node -r ts-node/register 文件路径 来运行，
 import { parse }  from "@babel/parser"
 import traverse from "@babel/traverse"
 import { readFileSync } from 'fs'
