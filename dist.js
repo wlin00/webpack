@@ -1,6 +1,6 @@
 var depRelation = [{
         key: "index.js",
-        deps: ["a.js","b.js"],
+        deps: ["a.js","b.js","style.css"],
         code: function(require, module, exports){
           "use strict";
 
@@ -8,9 +8,12 @@ var _a = _interopRequireDefault(require("./a.js"));
 
 var _b = _interopRequireDefault(require("./b.js"));
 
+require("./style.css");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 // 合理的循环引用
+// 编写 css-loader ， style-loader 来支持css文件打包成js
 console.log(_a["default"].getB());
 console.log(_b["default"].getA());
         }
@@ -61,6 +64,20 @@ var b = {
 };
 var _default = b;
 exports["default"] = _default;
+        }
+      },{
+        key: "style.css",
+        deps: [],
+        code: function(require, module, exports){
+          "use strict";
+
+var str = "body {\n  color: red;\n}";
+
+if (document) {
+  var style = document.createElement('style');
+  style.innerHTML = str;
+  document.head.appendChild(style);
+}
         }
       }];
 var modules = {};
