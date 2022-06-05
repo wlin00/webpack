@@ -1,3 +1,5 @@
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 module.exports = {
   mode: 'production',
   module: {
@@ -11,11 +13,15 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env'] // 使用babel-loader预设能力处理js/jsx文件，env是根据环境自动变化的一个推荐包
+              ['@babel/preset-env'], // 使用babel-loader预设能力处理js/jsx文件，env是根据环境自动变化的一个推荐包
+              ['@babel/preset-react'], // 使用babel的预设react配置，让webpack支持打包jsx
             ]
           }
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new CleanWebpackPlugin()
+  ]
 }

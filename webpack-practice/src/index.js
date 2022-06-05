@@ -1,5 +1,7 @@
 import { a } from './a' // 直接引入a
 const b = import('./b') // 动态引入b
+import { jsxDemo } from './jsx-demo.jsx';
+console.log('get - jsx', jsxDemo)
 
 const fn = () => {
   console.log('test')
