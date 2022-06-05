@@ -1,7 +1,14 @@
+const EsLintPlugin = require('eslint-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production',
+  plugins: [
+    new CleanWebpackPlugin(), // emit阶段写文件前清空output目录，done阶段清空assets目录无用、过期的文件；
+    new EsLintPlugin( // 让webpack打包时，能使用Eslint去找到代码中的错误
+      { extensions: ['.js', '.jsx'] }
+    ), 
+  ],
   module: {
     rules: [
       {
@@ -20,8 +27,5 @@ module.exports = {
         }
       }
     ]
-  },
-  plugins: [
-    new CleanWebpackPlugin()
-  ]
+  }
 }
