@@ -1,14 +1,20 @@
 const EsLintPlugin = require('eslint-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require('path')
 
 module.exports = {
   mode: 'production',
   plugins: [
     new CleanWebpackPlugin(), // emit阶段写文件前清空output目录，done阶段清空assets目录无用、过期的文件；
     new EsLintPlugin( // 让webpack打包时，能使用Eslint去找到代码中的错误
-      { extensions: ['.js', '.jsx'] }
+      { extensions: ['.js', '.jsx', '.ts', '.tsx'] }
     ), 
   ],
+  resolve: {
+    alias: { // 若webpack发现@符号，则默认找到当前目录下src
+      '@': path.resolve(__dirname, './src/')
+    }
+  },
   module: {
     rules: [
       {
