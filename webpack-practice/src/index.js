@@ -11,10 +11,16 @@ import '@/lessDemo.less'
 import varsLess from '@/less-export.less'
 
 
+
 const b = import('@/b') // 动态引入b
 console.log('vars', vars)
 console.log('vars-css', varsCss)
 console.log('vars-Less', varsLess)
+
+console.log('get - jsx', jsxDemo)
+console.log('get - ts', tsDemo)
+console.log('get - tsx', tsxDemo)
+
 
 const fn = () => {
   console.log('test')
