@@ -1,0 +1,4 @@
+// :export 该语法用于导出css变量，需要配置webpack的css-loader将css解析类型改为icss，即可通过js读取scss变量
+:export {
+  color: $color;
+}

@@ -35,12 +35,30 @@ module.exports = {
       },
       { // 处理scss文件，loader处理顺序, sass-loader -> css-loader -> style-loader
         test: /\.s[ac]ss$/i, // 不区分大小写的匹配scss / sass
-        use: ['style-loader', 'css-loader', {
+        use: ['style-loader', {
+          loader: 'css-loader', // 额外配置css-loader，将解析类型改为icss，从而支持js读取css导出变量
+          options: {
+            modules: {
+              compileType: 'icss'
+            }
+          }
+        }, {
           loader: 'sass-loader',
           options: {
             additionalData: `@import '~@/scss-vars.scss';`, // 全局注入scss-vars.scss
             sassOptions: { // 若不配置alias，引入文件基于当前目录__dirname
               includePaths: [__dirname]
+            }
+          }
+        }]
+      },
+      { // 处理css文件，loader处理顺序, css-loader -> style-loader
+        test: /\.css$/i, // 不区分大小写的匹配scss / sass
+        use: ['style-loader', {
+          loader: 'css-loader', // 额外配置css-loader，将解析类型改为icss，从而支持js读取css导出变量
+          options: {
+            modules: {
+              compileType: 'icss'
             }
           }
         }]
