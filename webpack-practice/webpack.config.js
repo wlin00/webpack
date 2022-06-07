@@ -64,7 +64,7 @@ module.exports = {
         }, {
           loader: 'less-loader',
           options: {
-            additionalData: `@import '@/less-vars.less';`, // 全局注入scss-vars.scss
+            additionalData: `@import '~@/less-vars.less';`, // 全局注入less-vars.less
             lessOptions: { // 若不配置alias，引入文件基于当前目录__dirname
               includePaths: [__dirname]
             }
