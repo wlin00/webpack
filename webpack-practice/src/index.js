@@ -2,6 +2,7 @@ import { a } from '@/a' // 直接引入a
 import { jsxDemo } from '@/jsx-demo.jsx';
 import { tsDemo } from '@/ts-demo.ts'
 import { tsxDemo } from '@/tsx-demo.tsx';
+import '@/scssDemo.scss'
 
 const b = import('@/b') // 动态引入b
 console.log('get - jsx', jsxDemo)

@@ -32,6 +32,11 @@ module.exports = {
             ]
           }
         }
+      },
+      {
+        // 处理scss文件，loader处理顺序, sass-loader -> css-loader -> style-loader
+        test: /\.s[ac]ss$/, // 不区分大小写的匹配scss & sass
+        use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
   }
