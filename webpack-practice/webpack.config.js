@@ -33,10 +33,17 @@ module.exports = {
           }
         }
       },
-      {
-        // 处理scss文件，loader处理顺序, sass-loader -> css-loader -> style-loader
-        test: /\.s[ac]ss$/, // 不区分大小写的匹配scss & sass
-        use: ['style-loader', 'css-loader', 'sass-loader']
+      { // 处理scss文件，loader处理顺序, sass-loader -> css-loader -> style-loader
+        test: /\.s[ac]ss$/i, // 不区分大小写的匹配scss / sass
+        use: ['style-loader', 'css-loader', {
+          loader: 'sass-loader',
+          options: {
+            additionalData: `@import '~@/scss-vars.scss';`, // 全局注入scss-vars.scss
+            sassOptions: { // 若不配置alias，引入文件基于当前目录__dirname
+              includePaths: [__dirname]
+            }
+          }
+        }]
       }
     ]
   }

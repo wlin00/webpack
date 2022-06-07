@@ -1,5 +1,7 @@
 // 引入scssDemo2.scss的color变量, alias需要添加～，来让webpack识别scss文件中的alias
-@import '~@/scssDemo2.scss';
+// @import '~@/scss-vars.scss';
+// 或者可以不在scss文件中import， 而是在sass-loader添加配置，全局引入某个scss文件。
+
 body {
   p {
     color: $color
