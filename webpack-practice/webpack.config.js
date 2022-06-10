@@ -33,10 +33,10 @@ module.exports = {
     path: path.resolve(__dirname, './dist')
   },
   // webpack优化配置，加快打包速度和体验等优化
-  optimization: {
+  optimization: { // （tree-shaking；单独打包运行时文件、第三方依赖、公共模块；固定模块Id）
     // tree-shaking：在es-module中，只去打包项目使用的模块；
     // 如果需要在开发环境使用tree-shaking，（但webpack其实不会真正在开发环境去除不用的文件，而只是做标记），就配置usedExports: true
-    // 并在 package.json 的 sideEffects 中配置上不希望tree-shaking掉的依赖
+    // 并在 package.json 的 sideEffects 中配置上不希望tree-shaking掉的依赖,如 "sideEffects": ["@babel/polly-fill"] 这类没有向外部暴露变量而只是在window上添加对象的包；
     // 若没有不想被shaking掉的包，则sideEffect设置为不去除css文件即可,如 "sideEffects": ["*.css"]
     usedExports: true,
 
