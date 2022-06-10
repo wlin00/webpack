@@ -52,7 +52,10 @@ module.exports = {
           chunks: 'all' // all 表示把来自node依赖的同步加载(initial)和异步加载(async)的都单独打包
         }
       }
-    }
+    },
+
+    // webpack打包时，会按一定顺序对模块编号；保证用户能尽量缓存使用已下载的没有变化的文件，则将没变化的模块id即文件名固定；
+    moduleIds: 'deterministic', // 确定模块id
   },
   plugins: [
     // emit阶段写文件前清空output目录，done阶段清空assets目录无用、过期的文件；
