@@ -23,7 +23,7 @@ const useStyleLoader = (...loader) => [
 
 module.exports = {
   mode,
-  entry: { // 多入口打包配置，index 和 admin 分别代表前端页面 和 后台页面的打包入口
+  entry: { // 多入口打包配置，index 和 admin 分别代表前端页面 和 后台页面的打包入口；（如果使用了多页面打包记得common chunks优化）
     index: './src/index.js',
     admin: './src/admin.js'
   }, 
@@ -47,6 +47,7 @@ module.exports = {
     // 单独打包 node_modules引入的依赖 如 import React from 'react';
     // 1、由于react、vue这些依赖不常升级改变；所以在编译的时候，为了能缓存之前的依赖，我们配置splitChunks来单独打包 node依赖
     // 2、为了用户缓存考虑，类似runtime单独打包，若只升级node依赖、而源文件代码未改变，用户还是可以使用同一个main.js缓存，节省带宽；
+    // 3、配置common属性，可以在多页面打包的情况下，将多个页面都用到的依赖单独打包，这样就不用每个页面都打包一次；
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -54,6 +55,12 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/, // 匹配/node_modules/ 和 \node_modules\
           name: 'vendors', // 单独打包输出到dist目录命名为 vendor.[hash]?.js
           chunks: 'all' // all 表示把来自node依赖的同步加载(initial)和异步加载(async)的都单独打包
+        },
+        common: {
+          minSize: 0, // 不管这个共同引入的包多小都单独打包,
+          minChunks: 2, // 最少两个页面共同使用就独立打包，
+          chunks: 'all', // all 表示把来自node依赖的同步加载(initial)和异步加载(async)的都单独打包
+          name: 'common', // 单独打包输出到dist目录命名为 common.[hash]?.js
         }
       }
     },
