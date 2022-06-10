@@ -1,8 +1,8 @@
 module.exports = {
   extends: ['react-app'],
   rules: {
-    'react/jsx-uses-react': [2], // 要在jsx文件里使用react，括号内：0 - 错误时不限制； 1 - 错误时警告；2 - 错误时报错；
-    'react/react-in-jsx-scope': [2], // 要在jsx中import React from 'react'
+    'react/jsx-uses-react': [1], // 要在jsx文件里使用react，括号内：0 - 错误时不限制； 1 - 错误时警告；2 - 错误时报错；
+    'react/react-in-jsx-scope': [1], // 要在jsx中import React from 'react'
     '@typescript-eslint/object-curly-spacing': [0], // 放开‘少写空格’的校验
     'import/prefer-default-export': [0], // 放开默认没有export default 的校验
     '@typescript-eslint/semi': [0], // 不检测代码末尾的 ;
@@ -17,6 +17,8 @@ module.exports = {
     },
     extends: ['airbnb-typescript'], // 在ts、tsx中用airbnb-typescript作为基础规则
     rules: { // 在ts、tsx中自定义规则
+      'react/jsx-uses-react': [1], // 要在jsx文件里使用react，括号内：0 - 错误时不限制； 1 - 错误时警告；2 - 错误时报错；
+      'react/react-in-jsx-scope': [1], // 要在jsx中import React from 'react'
       '@typescript-eslint/object-curly-spacing': [0], // 放开‘少写空格’的校验
       'import/prefer-default-export': [0], // 放开默认没有export default 的校验
       '@typescript-eslint/semi': [0], // 不检测代码末尾的 ;

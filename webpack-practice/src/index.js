@@ -9,9 +9,11 @@ import vars from '@/scss-export.scss'
 // test - less
 import '@/lessDemo.less'
 import varsLess from '@/less-export.less'
+// 使用tree-shaking 来去除es-module中未使用的依赖
+import { add } from '@/math.js'
 
 
-
+console.log('math', add(3,1))
 const b = import('@/b') // 动态引入b
 console.log('vars', vars)
 console.log('vars-css', varsCss)

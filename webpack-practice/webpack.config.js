@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const mode = 'production'
+// const mode = 'development'
 
 // 简化代码 - 使用抽离函数统一处理css/scss/less
 const useStyleLoader = (...loader) => [
@@ -22,9 +23,36 @@ const useStyleLoader = (...loader) => [
 
 module.exports = {
   mode,
+  // devtool: 'eval-cheap-module-source-map', // 不关心列信息 -> 获取经过loader处理后的es5代码 -> 每个模块用eval（）执行加速重构建 -> 报错信息精准；
   output: {
     filename: '[name].[contenthash].js', // 为输出的js添加hash，记得使用cleanWebpackPlugin 每次emit阶段清除dist
     path: path.resolve(__dirname, './dist')
+  },
+  // webpack优化配置，加快打包速度和体验等优化
+  optimization: {
+    // tree-shaking：在es-module中，只去打包项目使用的模块；
+    // 如果需要在开发环境使用tree-shaking，（但webpack其实不会真正在开发环境去除不用的文件，而只是做标记），就配置usedExports: true
+    // 并在 package.json 的 sideEffects 中配置上不希望tree-shaking掉的依赖
+    // 若没有不想被shaking掉的包，则sideEffect设置为不去除css文件即可,如 "sideEffects": ["*.css"]
+    usedExports: true,
+
+    // 单独打包运行时文件（即webpack让浏览器中能运行我们打包代码所需要的额外代码）
+    // 好处是：如果我们是单独打包运行时文件，在升级webpack版本等操作时（未动到文件源码）这样main.js没有改变，可以让用户依然使用main.js的缓存，为用户节省带宽降低打开页面用时，提升体验。
+    runtimeChunk: 'single', 
+
+    // 单独打包 node_modules引入的依赖 如 import React from 'react';
+    // 1、由于react、vue这些依赖不常升级改变；所以在编译的时候，为了能缓存之前的依赖，我们配置splitChunks来单独打包 node依赖
+    // 2、为了用户缓存考虑，类似runtime单独打包，若只升级node依赖、而源文件代码未改变，用户还是可以使用同一个main.js缓存，节省带宽；
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          minSize: 0, // 不管这个node的包多小都单独打包
+          test: /[\\/]node_modules[\\/]/, // 匹配/node_modules/ 和 \node_modules\
+          name: 'vendors', // 单独打包输出到dist目录命名为 vendor.[hash]?.js
+          chunks: 'all' // all 表示把来自node依赖的同步加载(initial)和异步加载(async)的都单独打包
+        }
+      }
+    }
   },
   plugins: [
     // emit阶段写文件前清空output目录，done阶段清空assets目录无用、过期的文件；
