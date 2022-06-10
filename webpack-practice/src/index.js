@@ -13,7 +13,7 @@ import varsLess from '@/less-export.less'
 import { add } from '@/math.js'
 // 多页面里，不同入口文件引入同一个文件, 记得使用common chunks优化
 import { shared } from '@/shared.ts'
-console.log('shared', shared)
+console.log('index-shared', shared)
 
 console.log('math', add(3,1))
 const b = import('@/b') // 动态引入b
@@ -34,3 +34,14 @@ const fn = () => {
 }
 
 fn()
+
+// 应用service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(() => {
+      console.log('registered')
+    }).catch((err) => {
+      console.log('registered err', err)
+    })
+  })
+}

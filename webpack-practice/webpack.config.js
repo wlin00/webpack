@@ -2,6 +2,7 @@ const EsLintPlugin = require('eslint-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin') // 生产环境，开启pwa能力，对已打开的页面做离线缓存
 const path = require('path')
 const mode = 'production'
 // const mode = 'development'
@@ -27,7 +28,14 @@ module.exports = {
     index: './src/index.js',
     admin: './src/admin.js'
   }, 
-  // devtool: 'eval-cheap-module-source-map', // 不关心列信息 -> 获取经过loader处理后的es5代码 -> 每个模块用eval（）执行加速重构建 -> 报错信息精准；
+  devServer: { 
+    //webpack4 配置contentBase，将默认服务访问的目录改为dist打包目录
+    // contentBase: path.join(__dirname, './dist')
+
+    // webpack5.x 改为static配置来 - 默认服务器访问路径为dist目录
+    static: './dist'
+  },
+  devtool: mode === 'development' ? 'eval-cheap-module-source-map' : 'cheap-module-source-map', // 不关心列信息 -> 获取经过loader处理后的es5代码 -> 每个模块用eval（）执行加速重构建 -> 报错信息精准；
   output: {
     filename: '[name].[contenthash].js', // 为输出的js添加hash，记得使用cleanWebpackPlugin 每次emit阶段清除dist
     path: path.resolve(__dirname, './dist')
@@ -78,6 +86,11 @@ module.exports = {
     // 单独提取css文件，需要在对应css-loader前将MiniCssExtractPlugin.loader替换style-loader
     mode === 'production' && new MiniCssExtractPlugin({ 
       filename: '[name].[contenthash].css' // 为css添加hash
+    }),
+    // pwa 利用service worker开启离线缓存能力
+    mode === 'production' && new WorkboxWebpackPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
     }),
     // 自动生成html页面, 多页面配置中，按页面数量配置HtmlWebpackPlugin
     new HtmlWebpackPlugin({
