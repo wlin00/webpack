@@ -23,6 +23,10 @@ const useStyleLoader = (...loader) => [
 
 module.exports = {
   mode,
+  entry: { // 多入口打包配置，index 和 admin 分别代表前端页面 和 后台页面的打包入口
+    index: './src/index.js',
+    admin: './src/admin.js'
+  }, 
   // devtool: 'eval-cheap-module-source-map', // 不关心列信息 -> 获取经过loader处理后的es5代码 -> 每个模块用eval（）执行加速重构建 -> 报错信息精准；
   output: {
     filename: '[name].[contenthash].js', // 为输出的js添加hash，记得使用cleanWebpackPlugin 每次emit阶段清除dist
@@ -64,12 +68,19 @@ module.exports = {
     new EsLintPlugin( 
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] }
     ), 
-    // 自动生成html页面
-    new HtmlWebpackPlugin(),
     // 单独提取css文件，需要在对应css-loader前将MiniCssExtractPlugin.loader替换style-loader
     mode === 'production' && new MiniCssExtractPlugin({ 
       filename: '[name].[contenthash].css' // 为css添加hash
-    }), 
+    }),
+    // 自动生成html页面, 多页面配置中，按页面数量配置HtmlWebpackPlugin
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      chunks: ['index'], // 索引到对应入口文件的前缀
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'admin.html',
+      chunks: ['admin'], // 索引到对应入口文件的前缀
+    }),
   ].filter(Boolean), // 过滤plugins中为false（即未开启）的选项，这样的写法给各个插件提供了开关的功能
   resolve: {
     alias: { // 若webpack发现@符号，则默认找到当前目录下src
