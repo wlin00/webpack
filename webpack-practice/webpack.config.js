@@ -3,6 +3,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin') // 生产环境，开启pwa能力，对已打开的页面做离线缓存
+const TerserPlugin = require('terser-webpack-plugin') // 压缩js代码
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin') // 压缩css代码
 const path = require('path')
 const mode = 'production'
 // const mode = 'development'
@@ -75,6 +77,11 @@ module.exports = {
 
     // webpack打包时，会按一定顺序对模块编号；保证用户能尽量缓存使用已下载的没有变化的文件，则将没变化的模块id即文件名固定；
     moduleIds: 'deterministic', // 确定模块id
+
+    // 压缩css 插件写在 optimization 的 minimizer 里
+    minimizer: [
+      new CssMinimizerPlugin()
+    ]
   },
   plugins: [
     // emit阶段写文件前清空output目录，done阶段清空assets目录无用、过期的文件；
@@ -91,6 +98,10 @@ module.exports = {
     mode === 'production' && new WorkboxWebpackPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
+    }),
+    // terser 压缩js/ts/jsx/tsx 代码
+    new TerserPlugin({
+      test: /\.[tj]sx?$/
     }),
     // 自动生成html页面, 多页面配置中，按页面数量配置HtmlWebpackPlugin
     new HtmlWebpackPlugin({
@@ -114,16 +125,19 @@ module.exports = {
         // 这样方便拓展更多能力
         test: /\.[tj]sx?$/,
         exclude: /node_modules/, // 遇到node_modules文件不处理，因为这些文件都默认打包过
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env'], // 使用babel-loader预设能力处理js文件，env是根据环境自动变化的一个推荐包
-              ['@babel/preset-react', { runtime: 'classic' }], // 使用babel的预设react配置，让webpack支持打包jsx
-              ['@babel/preset-typescript'], // 使用babel-loader预设能力处理ts文件
-            ]
+        use: [
+          'thread-loader', // 处理js/jsx/ts/tsx 时，开启多进程打包（这个 loader 位置之后的 loader 会放在一个单独的 worker 池， 每个worker具备600ms限制所以只在耗时loader开启）
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env'], // 使用babel-loader预设能力处理js文件，env是根据环境自动变化的一个推荐包
+                ['@babel/preset-react', { runtime: 'classic' }], // 使用babel的预设react配置，让webpack支持打包jsx
+                ['@babel/preset-typescript'], // 使用babel-loader预设能力处理ts文件
+              ]
+            }
           }
-        }
+        ]
       },
       { // 处理scss文件，loader处理顺序, sass-loader -> css-loader -> style-loader
         test: /\.s[ac]ss$/i, // 不区分大小写的匹配scss / sass
