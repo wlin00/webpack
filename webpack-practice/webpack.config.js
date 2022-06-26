@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin') // 生产环境，开启pwa能力，对已打开的页面做离线缓存
 const TerserPlugin = require('terser-webpack-plugin') // 压缩js代码
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin') // 压缩css代码
+const FileListPlugin = require('./src/plugins/fileListPlugin.ts')
 const path = require('path')
 const mode = 'production'
 // const mode = 'development'
@@ -112,6 +113,8 @@ module.exports = {
       filename: 'admin.html',
       chunks: ['admin'], // 索引到对应入口文件的前缀
     }),
+    // 自定义插件 - 在webpack的emit阶段(emit阶段主要是写文件到硬盘，即chunk转为文件)，额外输出一个md文件记录当前打包的各个依赖文件
+    new FileListPlugin(),
   ].filter(Boolean), // 过滤plugins中为false（即未开启）的选项，这样的写法给各个插件提供了开关的功能
   resolve: {
     alias: { // 若webpack发现@符号，则默认找到当前目录下src
@@ -136,6 +139,9 @@ module.exports = {
                 ['@babel/preset-typescript'], // 使用babel-loader预设能力处理ts文件
               ]
             }
+          },
+          {
+            loader: path.resolve(__dirname, './src/loaders/replaceAsync.ts') // 自定义loader - replace入口文件中关键字
           }
         ]
       },

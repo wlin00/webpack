@@ -13,18 +13,17 @@ import varsLess from '@/less-export.less'
 import { add } from '@/math.js'
 // 多页面里，不同入口文件引入同一个文件, 记得使用common chunks优化
 import { shared } from '@/shared.ts'
-console.log('index-shared', shared)
 
+console.log('hello world') // 测试loader：替换hello为sync / async
+console.log('index-shared', shared)
 console.log('math', add(3,1))
 const b = import('@/b') // 动态引入b
 console.log('vars', vars)
 console.log('vars-css', varsCss)
 console.log('vars-Less', varsLess)
-
 console.log('get - jsx', jsxDemo)
 console.log('get - ts', tsDemo)
 console.log('get - tsx', tsxDemo)
-
 
 const fn = () => {
   console.log('test')
@@ -32,7 +31,6 @@ const fn = () => {
   console.log('b', b)
   console.log(Promise.resolve('test promise'))
 }
-
 fn()
 
 // 应用service worker
