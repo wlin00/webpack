@@ -19,7 +19,8 @@ const useStyleLoader = (...loader) => [
     options: {
       modules: {
         compileType: 'icss'
-      }
+      },
+      modules: true
     }
   }, 
   ...loader // 根据入参loader处理
