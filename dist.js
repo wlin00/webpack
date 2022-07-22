@@ -94,7 +94,7 @@ execute(depRelation[0].key)
         var projectPath = (dirname + path).replace(/\.\//g, '').replace(/\/\//, '/')
         return projectPath
       }
-      var require = (path) => {
+      var require = (path) => { // 重点：当前处理的文件中，如果有require引入文件，则递归execute来对模块进行递归打包处理
         return execute(pathToKey(path))
       }
       modules[key] = { __esModule: true } // 缓存当前模块
